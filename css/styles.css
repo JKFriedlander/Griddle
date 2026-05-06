@@ -1,0 +1,422 @@
+/* ─── Reset ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── Tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+  --font-display: 'Orbitron', sans-serif;
+  --ease: 0.25s ease;
+  --border-radius-sm: 3px;
+  --border-radius-md: 4px;
+  --border-radius-pill: 20px;
+}
+
+/* ─── Dark Theme ─────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:           #07090f;
+  --surface:      #0f1c2a;
+  --border:       #1d3a52;
+  --p1:           #00d4f0;
+  --p2:           #ff5828;
+  --text:         #a8cdd8;
+  --text-sub:     #28606e;
+  --text-dim:     #121f28;
+  --f1:           #4488ee;
+  --m2:           #e09000;
+  --m3:           #e83020;
+  --f3:           #00bb78;
+  --bk-x:         #2d5068;
+  --run-color:    #ffd700;
+  --run-bg:       rgba(255, 215, 0, 0.13);
+  --score-line:   #1d3a52;
+  --overlay-bg:   rgba(7, 9, 15, 0.93);
+  --hover-bg:     rgba(0, 212, 240, 0.05);
+  --p1-shadow:    rgba(0, 212, 240, 0.33);
+  --p2-shadow:    rgba(255, 88, 40, 0.33);
+  --gold-shadow:  rgba(224, 144, 0, 0.33);
+}
+
+/* ─── Light Theme ────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:           #f5f0e6;
+  --surface:      #e4ddd0;
+  --border:       #8a8272;
+  --p1:           #0055cc;
+  --p2:           #cc3300;
+  --text:         #252c38;
+  --text-sub:     #7a7460;
+  --text-dim:     #c8c0b0;
+  --f1:           #2244cc;
+  --m2:           #996200;
+  --m3:           #cc1400;
+  --f3:           #006633;
+  --bk-x:         #7a7262;
+  --run-color:    #cc8800;
+  --run-bg:       rgba(160, 120, 0, 0.12);
+  --score-line:   #c8c0b0;
+  --overlay-bg:   rgba(245, 240, 230, 0.94);
+  --hover-bg:     rgba(0, 80, 200, 0.05);
+  --p1-shadow:    transparent;
+  --p2-shadow:    transparent;
+  --gold-shadow:  transparent;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--ease), color var(--ease);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+  max-width: 560px;
+}
+
+/* ─── Utility colour classes ─────────────────────────────────────────────── */
+/* (applied via JS innerHTML so these live in CSS) */
+.c-p1     { color: var(--p1); }
+.c-p2     { color: var(--p2); }
+.c-gold   { color: var(--m2); }
+.c-f1     { color: var(--f1); }
+.c-m2     { color: var(--m2); }
+.c-m3     { color: var(--m3); }
+.c-f3     { color: var(--f3); }
+.c-bk     { color: var(--bk-x); }
+.c-text-sub { color: var(--text-sub); }
+.c-p1-bg  { background: var(--p1); }
+.c-p2-bg  { background: var(--p2); }
+
+/* ─── Theme Toggle ───────────────────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-pill);
+  padding: 6px 16px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  transition: border-color var(--ease), color var(--ease);
+}
+.theme-toggle:hover {
+  border-color: var(--p1);
+  color: var(--p1);
+}
+
+/* ─── Title ──────────────────────────────────────────────────────────────── */
+.game-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 38px;
+  letter-spacing: 0.45em;
+  color: var(--p1);
+  margin-bottom: 6px;
+  text-align: center;
+  text-shadow: 0 0 28px var(--p1-shadow);
+}
+.game-title.small {
+  font-size: 22px;
+  letter-spacing: 0.44em;
+  margin-bottom: 13px;
+  text-shadow: 0 0 18px var(--p1-shadow);
+}
+
+.game-subtitle {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ─── Menu ───────────────────────────────────────────────────────────────── */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.menu-legend {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-bottom: 38px;
+  line-height: 2.2;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 310px;
+}
+
+.menu-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  padding: 13px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  text-align: center;
+  width: 100%;
+}
+.menu-btn:hover {
+  border-color: var(--p1);
+  color: var(--text);
+  background: var(--hover-bg);
+}
+
+/* ─── Game Screen ────────────────────────────────────────────────────────── */
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ─── Scoreboard ─────────────────────────────────────────────────────────── */
+.scoreboard {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.score-vs {
+  font-size: 11px;
+  color: var(--score-line);
+}
+
+.score-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 96px;
+}
+.score-block.player-0 { align-items: flex-end; text-align: right; }
+.score-block.player-1 { align-items: flex-start; text-align: left; }
+
+.score-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  margin-bottom: 2px;
+  color: var(--text-sub);
+  transition: color var(--ease);
+}
+.score-block.active.player-0 .score-label { color: var(--p1); }
+.score-block.active.player-1 .score-label { color: var(--p2); }
+
+.score-value {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.run-badge {
+  font-size: 9px;
+  color: var(--run-color);
+  background: var(--run-bg);
+  border-radius: var(--border-radius-sm);
+  padding: 1px 7px;
+  margin-top: 3px;
+  letter-spacing: 0.08em;
+}
+
+.run-spacer { height: 20px; }
+
+.score-underline {
+  height: 2px;
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 1px;
+  transition: background var(--ease);
+}
+
+/* ─── Puzzle hint ────────────────────────────────────────────────────────── */
+.puzzle-hint {
+  font-size: 9px;
+  color: var(--text-sub);
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* ─── Board ──────────────────────────────────────────────────────────────── */
+.board-container {
+  line-height: 0; /* prevent extra inline-block spacing below SVG */
+}
+.board-container svg {
+  max-width: 100%;
+  max-height: 64vh;
+  display: block;
+}
+
+/* ─── Status Bar ─────────────────────────────────────────────────────────── */
+.status-bar {
+  margin-top: 10px;
+  font-size: 9px;
+  color: var(--text-sub);
+  letter-spacing: 0.1em;
+  text-align: center;
+  line-height: 2;
+}
+.ai-thinking { color: var(--p2); }
+
+.legend-bar { font-size: 9px; }
+
+/* ─── Back Button ────────────────────────────────────────────────────────── */
+.back-btn {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid var(--score-line);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  padding: 4px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.back-btn:hover { border-color: var(--p1); color: var(--p1); }
+
+/* ─── Game Over Overlay ──────────────────────────────────────────────────── */
+.game-over-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.game-over-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.win-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(24px, 5vw, 40px);
+  letter-spacing: 0.38em;
+  margin-bottom: 8px;
+}
+.win-title.c-p1 { text-shadow: 0 0 28px var(--p1-shadow); }
+.win-title.c-p2 { text-shadow: 0 0 28px var(--p2-shadow); }
+.win-title.c-gold { text-shadow: 0 0 28px var(--gold-shadow); }
+
+.win-subtitle {
+  font-size: 10px;
+  color: var(--text-sub);
+  letter-spacing: 0.15em;
+  margin-bottom: 20px;
+}
+
+.final-scores {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+}
+
+.final-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.final-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.final-value {
+  font-size: 44px;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+[data-theme="dark"] .final-value.c-p1 { filter: drop-shadow(0 0 14px rgba(0, 212, 240, 0.4)); }
+[data-theme="dark"] .final-value.c-p2 { filter: drop-shadow(0 0 14px rgba(255, 88, 40, 0.4)); }
+
+.puzzle-result {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+
+.game-over-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background: transparent;
+  border: 1px solid var(--p1);
+  border-radius: var(--border-radius-sm);
+  color: var(--p1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  padding: 10px 26px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--hover-bg); }
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  padding: 10px 26px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-secondary:hover { border-color: var(--text); color: var(--text); }
+
+/* ─── SVG Animations ─────────────────────────────────────────────────────── */
+@keyframes lastPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.48; }
+}
+
+/* Applied directly to the SVG <line> element via the 'class' attribute in the
+   HTML string built by renderer.js. Works because the SVG is inline in the DOM. */
+.last-move {
+  animation: lastPulse 1.4s ease-in-out infinite;
+}
