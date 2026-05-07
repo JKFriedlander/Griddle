@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRID — Developer Tools</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@900&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <button class="theme-toggle" id="theme-btn">LIGHT</button>
+
+  <div id="app">
+    <div class="menu">
+      <div class="game-title small">GRID</div>
+      <div class="game-subtitle">DEVELOPER TOOLS</div>
+
+      <div class="menu-buttons">
+        <a href="puzzle-walkthrough.html" class="menu-btn">PUZZLE WALKTHROUGH</a>
+        <a href="puzzle-analyzer.html" class="menu-btn">PUZZLE ANALYZER</a>
+        <a href="../index.html" class="menu-btn" style="color: var(--text-sub); border-color: var(--border);">← BACK TO GAME</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <ul>
+      <li><a href="../index.html">Game</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('theme-btn');
+    const html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      html.dataset.theme = next;
+      btn.textContent = next === 'dark' ? 'LIGHT' : 'DARK';
+    });
+  </script>
+</body>
+</html>
