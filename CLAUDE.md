@@ -47,3 +47,9 @@ The base `+1` always applies before the bonus. GTO rule: apply multipliers last 
 ## Themes
 
 SVG attributes can't use CSS custom properties, so theme colors live in `THEMES` in `config.js` (not in `styles.css`). `dark`/`light` toggle is stored in `app.dark` and `document.documentElement.dataset.theme`.
+
+**When writing or editing styles:**
+
+- Always use CSS custom properties (`var(--token)`) — never hardcode color values (hex, rgb, rgba, hsl) directly in rules.
+- If a needed color isn't covered by an existing token, add it to both `[data-theme="dark"]` and `[data-theme="light"]` in `styles.css` before using it.
+- After any style change, scan the full `.css` file being edited for remaining hardcoded color values and replace them with the appropriate variables.
