@@ -10,7 +10,7 @@ A strategic puzzle game built with vanilla HTML, CSS, and JavaScript (ES modules
 - **Bonus squares** — flat bonuses (+1/+2/+3) and run multipliers (×2/×3)
 - **Blocked nodes** — permanent walls that reshape the board
 - **Last-move glow** — pulsing highlight shows the most recent edge drawn
-- **Puzzle Mode** — a hand-crafted endgame with a game-theory optimal solution
+- **Puzzle Mode** — server-driven endgame puzzles with game-theory optimal solutions
 
 ## Scoring Rules
 
@@ -22,63 +22,46 @@ Each turn you draw edges until you fail to capture a box.
 | Flat (+n)   | `run = run + 1 + n`  (base first)     |
 | Multi (×n)  | `run = (run + 1) × n` (base first)    |
 
-When your turn ends your run is banked.  The key insight: always apply
+When your turn ends your run is banked. The key insight: always apply
 multipliers **last** — they multiply everything built up before them.
 
-## Puzzle Mode
+## Running Locally
 
-You face an endgame with four remaining boxes:
+ES modules require a web server, and Puzzle Mode needs the custom server API.
 
-| Box   | Bonus | Status        |
-|-------|-------|---------------|
-| A     | ×3    | 3 sides drawn |
-| B     | +2    | 3 sides drawn |
-| C     | +1    | 3 sides drawn |
-| D     | ×3    | 2 sides (walls) — CPU will claim this |
+```bash
+cd grid-game
+python3 server.py
+# open http://localhost:8080
+```
 
-**The lesson:** take A (×3) *last*.
-
-- Optimal: C → B → A gives run = 18 → YOU WIN 25–17
-- Wrong:   A first      gives run = 8  → YOU LOSE 15–17
+`server.py` serves static files and exposes a small write API for puzzle management. Do **not** use `python3 -m http.server` — it won't serve the puzzle API.
 
 ## Project Structure
 
 ```
 grid-game/
-├── index.html          # HTML shell (single page)
+├── index.html              # HTML shell (single page)
+├── server.py               # Dev server: static files + puzzle API
 ├── css/
-│   └── styles.css      # All styles; CSS custom properties for theming
-└── js/
-    ├── config.js       # Constants, blocked dots, bonus defs, theme colours
-    ├── game.js         # Pure game logic (no DOM)
-    ├── puzzle.js       # Solo puzzle board builder
-    ├── renderer.js     # SVG string builder (no DOM side-effects)
-    └── main.js         # App state, rendering, event handling
+│   └── styles.css          # All styles; CSS custom properties for theming
+├── js/
+│   ├── config.js           # Constants, blocked dots, bonus defs, theme colours
+│   ├── game.js             # Pure game logic (no DOM)
+│   ├── puzzle.js           # Fetches active puzzle from server
+│   ├── renderer.js         # SVG string builder (no DOM side-effects)
+│   └── main.js             # App state, rendering, event handling
+├── puzzles/
+│   ├── config.json         # Points to the active puzzle: { "active": "puzzle-01" }
+│   └── puzzle-01.json      # Puzzle game-state snapshots
+├── developer/              # Standalone React tools (CDN React, no build)
+│   ├── puzzle-analyzer.jsx # GTO analysis — enumerates all box orderings
+│   ├── puzzle-manager.jsx  # Create / switch puzzles via the server API
+│   └── puzzle-walkthrough.jsx  # Step-by-step puzzle explanation
+└── docs/
+    ├── game-rules.md       # Scoring system deep-dive
+    └── project-structure.md
 ```
-
-## Running Locally
-
-ES modules require a web server (browsers block `file://` module imports).
-
-### Option A — Python (no install needed)
-
-```bash
-cd grid-game
-python3 -m http.server 8080
-# open http://localhost:8080
-```
-
-### Option B — Node.js / npx
-
-```bash
-cd grid-game
-npx serve .
-# follow the URL printed in the terminal
-```
-
-### Option C — VS Code
-
-Install the **Live Server** extension, right-click `index.html` → *Open with Live Server*.
 
 ## Browser Support
 

@@ -1,4 +1,6 @@
-### Game-theory optimal (GTO) order
+## GTO scoring order
+
+When a player holds multiple capturable boxes in a run, the order they are taken determines the final score. This file explains the optimal sequence.
 
 The scoring system is **order-dependent** when multipliers are involved:
 

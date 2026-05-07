@@ -1,6 +1,10 @@
 ## Solo Puzzle Mode
 
-The puzzle is a **pre-configured endgame** loaded by `buildSoloPuzzle()` in `puzzle.js`.
+The puzzle is loaded dynamically from `puzzles/config.json` → `puzzles/<id>.json` via `loadActivePuzzle()` in `puzzle.js`. The active puzzle can be changed from the Puzzle Manager at `developer/puzzle-manager.html`.
+
+### Default puzzle: "The Classic" (`puzzle-01`)
+
+A **pre-configured endgame** with 4 remaining corner boxes.
 
 ### State going in
 - 21 boxes pre-captured and pre-drawn (`'pre'` edges, filled boxes)
@@ -29,3 +33,30 @@ The puzzle uses `SOLO_BMAP` instead of `BMAP`. In `main.js`, the correct map is 
 ```js
 const bm = app.mode === 'SOLO' ? SOLO_BMAP : BMAP;
 ```
+
+### Puzzle JSON format
+
+Each puzzle file is a complete `GameState` snapshot:
+
+```json
+{
+  "id": "puzzle-01",
+  "title": "The Classic",
+  "description": "...",
+  "difficulty": "medium",
+  "h": [[...], ...],
+  "v": [[...], ...],
+  "captured": [[...], ...],
+  "committed": [7, 14],
+  "runScore": 0,
+  "player": 0,
+  "over": false,
+  "lastMove": null
+}
+```
+
+### Adding a new puzzle
+
+1. Open `developer/puzzle-manager.html` (requires `server.py` running) to create the puzzle via the UI, or write `puzzles/<id>.json` by hand following the format above.
+2. Set `"active"` in `puzzles/config.json` to the new ID.
+3. Verify the GTO solution using `developer/puzzle-analyzer.html`.
