@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRID — Puzzle Manager</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Share Tech Mono', monospace; min-height: 100vh; }
+
+    .pm-layout { display: grid; grid-template-columns: 320px 1fr; gap: 0; min-height: 100vh; }
+    .pm-sidebar { border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+    .pm-main { padding: 20px; overflow-y: auto; }
+
+    .pm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .pm-title { font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 2px; color: var(--text-sub); }
+
+    .pm-btn { font-family: inherit; font-size: 11px; letter-spacing: 1px; padding: 6px 12px; border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+    .pm-btn:hover { border-color: var(--text-sub); }
+    .pm-btn.primary { border-color: var(--p1); color: var(--p1); }
+    .pm-btn.primary:hover { background: rgba(0,212,240,0.08); }
+    .pm-btn.danger { border-color: var(--p2); color: var(--p2); }
+    .pm-btn.danger:hover { background: rgba(255,88,40,0.08); }
+    .pm-btn.active-btn { border-color: var(--f3); color: var(--f3); }
+    .pm-btn.sm { padding: 4px 8px; font-size: 10px; }
+
+    .puzzle-item { border: 1px solid var(--border); padding: 12px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s; }
+    .puzzle-item:hover { border-color: var(--text-sub); }
+    .puzzle-item.selected { border-color: var(--p1); }
+    .puzzle-item.is-active { border-color: var(--f3); }
+    .puzzle-item-title { font-size: 13px; margin-bottom: 4px; }
+    .puzzle-item-meta { font-size: 10px; color: var(--text-sub); display: flex; gap: 8px; align-items: center; }
+    .active-badge { color: var(--f3); font-size: 10px; }
+    .diff-badge { padding: 2px 6px; border: 1px solid currentColor; font-size: 9px; }
+    .diff-easy { color: var(--f3); }
+    .diff-medium { color: var(--m2); }
+    .diff-hard { color: var(--p2); }
+
+    .section-label { font-size: 10px; letter-spacing: 2px; color: var(--text-sub); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+
+    .preview-panel { margin-bottom: 24px; }
+    .preview-scores { display: flex; gap: 20px; margin-top: 8px; font-size: 11px; color: var(--text-sub); }
+
+    .editor-form { display: grid; gap: 12px; }
+    .form-row { display: grid; grid-template-columns: 120px 1fr; gap: 8px; align-items: center; }
+    .form-label { font-size: 10px; letter-spacing: 1px; color: var(--text-sub); }
+    .form-input { font-family: inherit; font-size: 12px; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 6px 8px; width: 100%; }
+    .form-input:focus { outline: none; border-color: var(--p1); }
+    select.form-input { cursor: pointer; }
+
+    .board-editor { margin: 16px 0; }
+    .editor-grid { display: inline-block; position: relative; }
+
+    .editor-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--bg); border: 1px solid var(--f3); color: var(--f3); padding: 10px 16px; font-size: 11px; z-index: 100; }
+    .toast.error { border-color: var(--p2); color: var(--p2); }
+
+    .back-link { font-size: 11px; color: var(--text-sub); text-decoration: none; letter-spacing: 1px; }
+    .back-link:hover { color: var(--text); }
+
+    .tab-bar { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .tab { font-family: inherit; font-size: 11px; letter-spacing: 1px; padding: 8px 16px; border: none; background: transparent; color: var(--text-sub); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .tab.active { color: var(--p1); border-bottom-color: var(--p1); }
+
+    .theme-toggle { position: fixed; top: 12px; right: 12px; font-family: inherit; font-size: 10px; letter-spacing: 1px; padding: 5px 10px; border: 1px solid var(--border); background: transparent; color: var(--text-sub); cursor: pointer; z-index: 50; }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="theme-btn">LIGHT</button>
+  <div id="root"></div>
+  <script type="text/babel" src="puzzle-manager.jsx" data-presets="react"></script>
+  <script>
+    const btn = document.getElementById('theme-btn');
+    const html = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      html.dataset.theme = next;
+      btn.textContent = next === 'dark' ? 'LIGHT' : 'DARK';
+    });
+  </script>
+</body>
+</html>

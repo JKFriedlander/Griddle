@@ -3,7 +3,7 @@ import {
   THEMES, TOTAL,
 } from './config.js';
 import { initGameState, applyMove, aiMove } from './game.js';
-import { buildSoloPuzzle } from './puzzle.js';
+import { loadActivePuzzle } from './puzzle.js';
 import { buildBoardSVG } from './renderer.js';
 
 // ─── App state ────────────────────────────────────────────────────────────
@@ -44,9 +44,9 @@ function winLabel(wi) {
 const winClass = wi => wi === -1 ? 'gold' : `p${wi}`;
 
 // ─── Game logic ───────────────────────────────────────────────────────────
-function startGame(mode) {
+async function startGame(mode) {
   app.mode      = mode;
-  app.game      = mode === 'SOLO' ? buildSoloPuzzle() : initGameState(BLOCKED);
+  app.game      = mode === 'SOLO' ? await loadActivePuzzle() : initGameState(BLOCKED);
   app.aiRunning = false;
   app.hov       = null;
   app.hovKey    = null;

@@ -1,0 +1,33 @@
+{
+  "id": "puzzle-01",
+  "title": "The Classic",
+  "description": "A 4-box endgame. Apply multipliers last.",
+  "difficulty": "medium",
+  "h": [
+    [null, "pre", "wall", "wall", null],
+    ["pre", "pre", "pre", "pre", "pre"],
+    ["pre", "wall", "wall", "pre", "pre"],
+    ["pre", "pre", "pre", "pre", "pre"],
+    ["pre", "pre", "pre", "wall", "wall"],
+    [null, "pre", "pre", "pre", null]
+  ],
+  "v": [
+    ["pre", "pre", "pre", "wall", "pre", "pre"],
+    ["pre", "pre", "wall", "pre", "pre", "pre"],
+    ["pre", "pre", "wall", "pre", "pre", "pre"],
+    ["pre", "pre", "pre", "pre", "wall", "pre"],
+    ["pre", "pre", "pre", "pre", "wall", null]
+  ],
+  "captured": [
+    [null, 1, 1, 1, null],
+    [1, 0, 0, 1, 1],
+    [1, 1, 0, 0, 1],
+    [1, 1, 0, 0, 1],
+    [null, 1, 0, 1, null]
+  ],
+  "committed": [7, 14],
+  "runScore": 0,
+  "player": 0,
+  "over": false,
+  "lastMove": null
+}
