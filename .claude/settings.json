@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/pre-tool-use-read-docs.py",
+            "timeout": 10,
+            "statusMessage": "Reading documentation..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/post-tool-use-update-docs.py",
+            "timeout": 10,
+            "statusMessage": "Checking documentation..."
+          }
+        ]
+      }
+    ]
+  }
+}
