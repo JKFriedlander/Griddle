@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+const { useState, useEffect, useCallback, useRef } = React;
 
 // ─── MATHS ─────────────────────────────────────────────────────────────────
 
@@ -488,7 +488,7 @@ function TheoryPanel({ puzzle, analysis }) {
 
 // ─── MAIN APP ──────────────────────────────────────────────────────────────
 
-export default function App() {
+function App() {
   const [presetIdx, setPresetIdx] = useState(0);
   const [puzzle, setPuzzle]       = useState(PRESETS[0]);
   const [analysis, setAnalysis]   = useState(() => analyzeAll(PRESETS[0]));
@@ -842,3 +842,7 @@ export default function App() {
     </div>
   );
 }
+
+// Auto-mount when loaded directly via HTML
+const _root = document.getElementById('root');
+if (_root) ReactDOM.createRoot(_root).render(React.createElement(App));

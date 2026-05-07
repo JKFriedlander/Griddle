@@ -68,6 +68,7 @@ body {
   color: var(--text);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: background var(--ease), color var(--ease);
@@ -419,4 +420,23 @@ body {
    HTML string built by renderer.js. Works because the SVG is inline in the DOM. */
 .last-move {
   animation: lastPulse 1.4s ease-in-out infinite;
+}
+
+/* ========== FOOTER ========== */
+footer{
+  width: 100%;
+  margin-top: auto;
+}
+footer ul {
+  text-align: center; 
+  padding: 1rem; 
+  font-size: 0.9rem; 
+  color: #888;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+footer ul a{
+  color: #888;
+  text-decoration: none;
 }
