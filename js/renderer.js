@@ -1,13 +1,7 @@
-import { ROWS, COLS, DS, PAD, HIT, BW, BH, BSET, gx, gy } from './config.js';
+import { DS, PAD, HIT, gx, gy } from './config.js';
+import { board } from './boardConfig.js';
 
 // ─── SVG helpers ──────────────────────────────────────────────────────────
-const svgEl = (tag, attrs, children = '') => {
-  const a = Object.entries(attrs)
-    .map(([k, v]) => `${k}="${v}"`)
-    .join(' ');
-  return `<${tag} ${a}>${children}</${tag}>`;
-};
-
 const line = (attrs) => {
   const a = Object.entries(attrs).map(([k, v]) => `${k}="${v}"`).join(' ');
   return `<line ${a}/>`;
@@ -47,9 +41,10 @@ function buildDefs(th) {
 
 // ─── Box fills ────────────────────────────────────────────────────────────
 function buildBoxFills(captured, th) {
+  const { rows, cols } = board;
   let out = '';
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
       const o = captured[r][c];
       if (o === null) continue;
       out += rect({
@@ -75,7 +70,7 @@ function buildBonusIcon(r, c, op, val, captured, th) {
   if (op === '*') {
     color = val === 3 ? th.m3 : th.m2;
     bg    = val === 3 ? th.m3bg : th.m2bg;
-    label = `\u00d7${val}`; // × (multiplication sign)
+    label = `×${val}`; // × (multiplication sign)
   } else {
     color = val === 3 ? th.f3 : val === 2 ? th.f2 : th.f1;
     bg    = val === 3 ? th.f3bg : val === 2 ? th.f2bg : th.f1bg;
@@ -195,11 +190,12 @@ function buildEdge(axis, r, c, e, th, dark, hov, lastMove, canDraw, hovColor) {
 
 // ─── Dots ─────────────────────────────────────────────────────────────────
 function buildDots(th) {
+  const { rows, cols, bset } = board;
   let out = '';
-  for (let r = 0; r <= ROWS; r++) {
-    for (let c = 0; c <= COLS; c++) {
+  for (let r = 0; r <= rows; r++) {
+    for (let c = 0; c <= cols; c++) {
       const cx = gx(c), cy = gy(r);
-      if (BSET.has(`${r},${c}`)) {
+      if (bset.has(`${r},${c}`)) {
         // Blocked dot — X mark
         out += `<g style="pointer-events:none">
           ${circle({ cx, cy, r: 8, fill: th.bkFill, stroke: th.bkStroke, 'stroke-width': 1.5 })}
@@ -228,21 +224,22 @@ function buildDots(th) {
  * @returns {string}          SVG element as an HTML string.
  */
 export function buildBoardSVG(game, bonusDef, th, dark, hov, canDraw, hovColor) {
+  const { rows, cols, bw, bh } = board;
   const { h, v, captured, lastMove } = game;
   let out = `<svg xmlns="http://www.w3.org/2000/svg"
     id="game-board"
-    width="${BW}" height="${BH}"
-    viewBox="0 0 ${BW} ${BH}">`;
+    width="${bw}" height="${bh}"
+    viewBox="0 0 ${bw} ${bh}">`;
 
   // ─ Filters ─
   out += buildDefs(th);
 
   // ─ Background grid lines (very subtle) ─
-  for (let i = 0; i <= ROWS; i++) {
-    out += `<line x1="${PAD}" y1="${gy(i)}" x2="${PAD + COLS * DS}" y2="${gy(i)}" stroke="${th.gridLine}" stroke-width="1"/>`;
+  for (let i = 0; i <= rows; i++) {
+    out += `<line x1="${PAD}" y1="${gy(i)}" x2="${PAD + cols * DS}" y2="${gy(i)}" stroke="${th.gridLine}" stroke-width="1"/>`;
   }
-  for (let i = 0; i <= COLS; i++) {
-    out += `<line x1="${gx(i)}" y1="${PAD}" x2="${gx(i)}" y2="${PAD + ROWS * DS}" stroke="${th.gridLine}" stroke-width="1"/>`;
+  for (let i = 0; i <= cols; i++) {
+    out += `<line x1="${gx(i)}" y1="${PAD}" x2="${gx(i)}" y2="${PAD + rows * DS}" stroke="${th.gridLine}" stroke-width="1"/>`;
   }
 
   // ─ Layer 1: captured box fills ─
@@ -254,14 +251,12 @@ export function buildBoardSVG(game, bonusDef, th, dark, hov, canDraw, hovColor) 
   }
 
   // ─ Layer 3: all edges ─
-  // Horizontal: rows 0..ROWS, cols 0..COLS-1
-  for (let r = 0; r <= ROWS; r++)
-    for (let c = 0; c < COLS; c++)
+  for (let r = 0; r <= rows; r++)
+    for (let c = 0; c < cols; c++)
       out += buildEdge('h', r, c, h[r][c], th, dark, hov, lastMove, canDraw, hovColor);
 
-  // Vertical: rows 0..ROWS-1, cols 0..COLS
-  for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c <= COLS; c++)
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c <= cols; c++)
       out += buildEdge('v', r, c, v[r][c], th, dark, hov, lastMove, canDraw, hovColor);
 
   // ─ Layer 4: dots (always on top, pointer-events:none) ─

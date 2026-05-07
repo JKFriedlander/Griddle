@@ -1,27 +1,26 @@
-import {
-  BLOCKED, BMAP, SOLO_BMAP, BONUS_DEF, SOLO_BONUS_DEF,
-  THEMES, TOTAL,
-} from './config.js';
+import { THEMES } from './config.js';
+import { board, applyBoardConfig } from './boardConfig.js';
 import { initGameState, applyMove, aiMove } from './game.js';
 import { loadActivePuzzle } from './puzzle.js';
 import { buildBoardSVG } from './renderer.js';
 
 // ─── App state ────────────────────────────────────────────────────────────
 const app = {
-  dark:       true,
-  mode:       null,    // '2P' | 'AI' | 'SOLO' | null
-  game:       null,
-  aiRunning:  false,
-  hov:        null,    // { t, r, c } | null  — hovered edge
-  hovKey:     null,    // string key for fast change-detection
-  boardCtrl:  null,    // AbortController for board event listeners
+  dark:        true,
+  mode:        null,    // '2P' | 'AI' | 'SOLO' | null
+  game:        null,
+  aiRunning:   false,
+  hov:         null,    // { t, r, c } | null  — hovered edge
+  hovKey:      null,    // string key for fast change-detection
+  boardCtrl:   null,    // AbortController for board event listeners
+  globalBoard: null,    // cached board.json for restoring after SOLO
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
-const getTheme  = () => THEMES[app.dark ? 'dark' : 'light'];
-const getBmap   = () => app.mode === 'SOLO' ? SOLO_BMAP : BMAP;
-const getBonusDef = () => app.mode === 'SOLO' ? SOLO_BONUS_DEF : BONUS_DEF;
-const isCPUMode = () => app.mode === 'AI' || app.mode === 'SOLO';
+const getTheme    = () => THEMES[app.dark ? 'dark' : 'light'];
+const getBmap     = () => app.mode === 'SOLO' ? (app.game?.bmap    ?? {})  : board.bmap;
+const getBonusDef = () => app.mode === 'SOLO' ? (app.game?.bonusDef ?? []) : board.bonusDef;
+const isCPUMode   = () => app.mode === 'AI' || app.mode === 'SOLO';
 
 /** Scores including any uncommitted run. */
 function finalScores() {
@@ -45,8 +44,23 @@ const winClass = wi => wi === -1 ? 'gold' : `p${wi}`;
 
 // ─── Game logic ───────────────────────────────────────────────────────────
 async function startGame(mode) {
-  app.mode      = mode;
-  app.game      = mode === 'SOLO' ? await loadActivePuzzle() : initGameState(BLOCKED);
+  app.mode = mode;
+
+  if (mode === 'SOLO') {
+    const puzzle = await loadActivePuzzle();
+    // Apply the puzzle's board layout (rows, cols, blocked, bonusDef)
+    applyBoardConfig(puzzle);
+    // Build bmap for fast scoring lookups during play
+    puzzle.bmap = Object.fromEntries(
+      (puzzle.bonusDef ?? []).map(b => [`${b.r},${b.c}`, b])
+    );
+    app.game = puzzle;
+  } else {
+    // Restore global board layout for 2P/AI modes
+    if (app.globalBoard) applyBoardConfig(app.globalBoard);
+    app.game = initGameState(board.blocked);
+  }
+
   app.aiRunning = false;
   app.hov       = null;
   app.hovKey    = null;
@@ -63,7 +77,7 @@ function handleEdge(type, r, c) {
   const bm  = getBmap();
   const res = applyMove(type, r, c, app.game.player, app.game, bm);
   const cc  = res.captured.flat().filter(x => x !== null).length;
-  const over = cc === TOTAL;
+  const over = cc === board.total;
   const next = res.scored ? app.game.player : 1 - app.game.player;
 
   app.game  = { ...res, player: next, over };
@@ -92,7 +106,7 @@ function runCPU() {
       if (!mv) break;
       const r2 = applyMove(mv.t, mv.r, mv.c, 1, s, bm);
       const c2 = r2.captured.flat().filter(x => x !== null).length;
-      s = { ...r2, player: r2.scored ? 1 : 0, over: c2 === TOTAL };
+      s = { ...r2, player: r2.scored ? 1 : 0, over: c2 === board.total };
     }
 
     // Commit any open run when game ends mid-capture
@@ -153,7 +167,7 @@ function updateBoardOnly() {
   const boardEl = document.getElementById('board-container');
   if (!boardEl) return;
 
-  const { game, mode, aiRunning, hov } = app;
+  const { game, aiRunning, hov } = app;
   const th        = getTheme();
   const canDraw   = !game.over && !aiRunning && !(isCPUMode() && game.player === 1);
   const hovColor  = game.player === 0 ? th.p1 : th.p2;
@@ -167,13 +181,13 @@ function updateBoardOnly() {
 // ─── Full render: game screen ─────────────────────────────────────────────
 function renderGame() {
   const th       = getTheme();
-  const { game, mode, aiRunning, hov } = app;
+  const { game, aiRunning, hov } = app;
   const { player, over, runScore } = game;
   const fs       = finalScores();
   const wi       = over ? (fs[0] > fs[1] ? 0 : fs[1] > fs[0] ? 1 : -1) : null;
   const canDraw  = !over && !aiRunning && !(isCPUMode() && player === 1);
   const hovColor = player === 0 ? th.p1 : th.p2;
-  const isSolo   = mode === 'SOLO';
+  const isSolo   = app.mode === 'SOLO';
   const bonusDef = getBonusDef();
   const claimed  = game.captured.flat().filter(x => x !== null).length;
 
@@ -181,11 +195,10 @@ function renderGame() {
   const scoreBlock = (i) => {
     const active  = player === i && !over;
     const liveRun = i === player && runScore > 0 && !over;
-    const side    = i === 0 ? 'right' : 'left';
     return `
       <div class="score-block player-${i} ${active ? 'active' : ''}">
         <div class="score-label">
-          ${i === 0 && active ? '◀\u2009' : ''}${pLabel(i)}${i === 1 && active ? '\u2009▶' : ''}
+          ${i === 0 && active ? '◀ ' : ''}${pLabel(i)}${i === 1 && active ? ' ▶' : ''}
         </div>
         <div class="score-value c-p${i + 1}">${fs[i]}</div>
         ${liveRun
@@ -198,7 +211,7 @@ function renderGame() {
   document.getElementById('app').innerHTML = `
     <div class="game-screen">
       <button class="theme-toggle" id="theme-toggle">
-        ${app.dark ? '☀\u2009LIGHT' : '☾\u2009DARK'}
+        ${app.dark ? '☀ LIGHT' : '☾ DARK'}
       </button>
 
       <h1 class="game-title small">GRID</h1>
@@ -219,7 +232,7 @@ function renderGame() {
 
       <div class="status-bar">
         <div class="${aiRunning ? 'ai-thinking' : ''}">
-          ${aiRunning ? 'CPU THINKING...' : `${claimed} / ${TOTAL} BOXES CLAIMED`}
+          ${aiRunning ? 'CPU THINKING...' : `${claimed} / ${board.total} BOXES CLAIMED`}
         </div>
         <div class="legend-bar">
           <span class="c-f1">●</span> FLAT &nbsp;
@@ -239,7 +252,7 @@ function renderGame() {
   document.getElementById('back-btn').addEventListener('click', goToMenu);
 
   if (over) {
-    document.getElementById('play-again')?.addEventListener('click', () => startGame(mode));
+    document.getElementById('play-again')?.addEventListener('click', () => startGame(app.mode));
     document.getElementById('go-menu')?.addEventListener('click', goToMenu);
   }
 
@@ -266,7 +279,7 @@ function buildGameOverOverlay(wi, fs, isSolo) {
         </div>
         ${isSolo
           ? `<p class="puzzle-result c-${wi === 0 ? 'f3' : 'm3'}">
-               ${wi === 0 ? 'OPTIMAL PLAY FOUND!' : 'TRY SAVING THE \u00d73 FOR LAST'}
+               ${wi === 0 ? 'OPTIMAL PLAY FOUND!' : 'TRY SAVING THE ×3 FOR LAST'}
              </p>`
           : ''}
         <div class="game-over-buttons">
@@ -282,7 +295,7 @@ function renderMenu() {
   document.getElementById('app').innerHTML = `
     <div class="menu">
       <button class="theme-toggle" id="theme-toggle">
-        ${app.dark ? '☀\u2009LIGHT' : '☾\u2009DARK'}
+        ${app.dark ? '☀ LIGHT' : '☾ DARK'}
       </button>
 
       <h1 class="game-title">GRID</h1>
@@ -327,4 +340,18 @@ function goToMenu() {
 }
 
 // ─── Bootstrap ────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', renderMenu);
+async function init() {
+  try {
+    app.globalBoard = await fetch('/api/board').then(r => r.json());
+    applyBoardConfig(app.globalBoard);
+  } catch {
+    // server not running or board.json missing — keep config.js defaults
+    app.globalBoard = {
+      rows: board.rows, cols: board.cols,
+      blocked: board.blocked, bonusDef: board.bonusDef,
+    };
+  }
+  renderMenu();
+}
+
+document.addEventListener('DOMContentLoaded', init);

@@ -1,4 +1,4 @@
-import { ROWS, COLS } from './config.js';
+import { board } from './boardConfig.js';
 
 // ─── Edge initialisation ──────────────────────────────────────────────────
 /**
@@ -11,23 +11,25 @@ import { ROWS, COLS } from './config.js';
  *   1        — drawn by player 1
  */
 export function initWalls(blocked) {
-  const h = Array.from({ length: ROWS + 1 }, () => new Array(COLS).fill(null));
-  const v = Array.from({ length: ROWS },     () => new Array(COLS + 1).fill(null));
+  const { rows, cols } = board;
+  const h = Array.from({ length: rows + 1 }, () => new Array(cols).fill(null));
+  const v = Array.from({ length: rows },     () => new Array(cols + 1).fill(null));
 
   for (const { r, c } of blocked) {
     if (c > 0)    h[r][c - 1] = 'wall';
-    if (c < COLS) h[r][c]     = 'wall';
+    if (c < cols) h[r][c]     = 'wall';
     if (r > 0)    v[r - 1][c] = 'wall';
-    if (r < ROWS) v[r][c]     = 'wall';
+    if (r < rows) v[r][c]     = 'wall';
   }
   return { h, v };
 }
 
 /** Full blank game state (regular modes). */
 export function initGameState(blocked) {
+  const { rows, cols } = board;
   return {
     ...initWalls(blocked),
-    captured:  Array.from({ length: ROWS }, () => new Array(COLS).fill(null)),
+    captured:  Array.from({ length: rows }, () => new Array(cols).fill(null)),
     committed: [0, 0],   // scores banked when a run ends
     runScore:  0,         // live run accumulator for the active player
     player:    0,
@@ -43,8 +45,9 @@ export function initGameState(blocked) {
  * Vertical   edge (r,c): left of box (r,c) and right of box (r,c-1).
  */
 export function adjBoxes(type, r, c) {
+  const { rows, cols } = board;
   return (type === 'h' ? [[r - 1, c], [r, c]] : [[r, c - 1], [r, c]])
-    .filter(([br, bc]) => br >= 0 && br < ROWS && bc >= 0 && bc < COLS);
+    .filter(([br, bc]) => br >= 0 && br < rows && bc >= 0 && bc < cols);
 }
 
 /** Count how many of a box's 4 edges are non-null (drawn or walled). */
@@ -127,12 +130,13 @@ export function applyMove(type, r, c, player, state, bmap) {
 // ─── AI ───────────────────────────────────────────────────────────────────
 /** All null edges available to draw. */
 export function getAvail(h, v) {
+  const { rows, cols } = board;
   const edges = [];
-  for (let r = 0; r <= ROWS; r++)
-    for (let c = 0; c < COLS; c++)
+  for (let r = 0; r <= rows; r++)
+    for (let c = 0; c < cols; c++)
       if (h[r][c] === null) edges.push({ t: 'h', r, c });
-  for (let r = 0; r < ROWS; r++)
-    for (let c = 0; c <= COLS; c++)
+  for (let r = 0; r < rows; r++)
+    for (let c = 0; c <= cols; c++)
       if (v[r][c] === null) edges.push({ t: 'v', r, c });
   return edges;
 }
@@ -144,6 +148,7 @@ export function getAvail(h, v) {
  *   3. Random move as a last resort.
  */
 export function aiMove(h, v) {
+  const { rows, cols } = board;
   const avail = getAvail(h, v);
   if (!avail.length) return null;
 
@@ -166,8 +171,8 @@ export function aiMove(h, v) {
   // Priority 2 — don't hand opponent a 3-sided box
   const safe = avail.filter(m => {
     const { nh, nv } = sim(m);
-    for (let r = 0; r < ROWS; r++)
-      for (let c = 0; c < COLS; c++)
+    for (let r = 0; r < rows; r++)
+      for (let c = 0; c < cols; c++)
         if (countSides(r, c, nh, nv) === 3) return false;
     return true;
   });

@@ -4,6 +4,8 @@ Dev server for grid-game.
 Serves static files + a small write API for the puzzle admin panel.
 
 Endpoints:
+  GET  /api/board               → puzzles/board.json (global board layout)
+  POST /api/board               → write board layout to puzzles/board.json
   GET  /api/config              → puzzles/config.json
   POST /api/config              → write { "active": "<id>" } to puzzles/config.json
   GET  /api/puzzles             → list of puzzle metadata from puzzles/*.json
@@ -21,7 +23,9 @@ PUZZLES_DIR = os.path.join(ROOT, 'puzzles')
 
 class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/api/config':
+        if self.path == '/api/board':
+            self._send_file(os.path.join(PUZZLES_DIR, 'board.json'))
+        elif self.path == '/api/config':
             self._send_file(os.path.join(PUZZLES_DIR, 'config.json'))
         elif self.path == '/api/puzzles':
             self._list_puzzles()
@@ -29,7 +33,9 @@ class Handler(SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        if self.path == '/api/config':
+        if self.path == '/api/board':
+            self._receive_json(self._write_board)
+        elif self.path == '/api/config':
             self._receive_json(self._write_config)
         elif re.match(r'^/api/puzzles/[\w-]+$', self.path):
             puzzle_id = self.path.split('/')[-1]
@@ -62,7 +68,7 @@ class Handler(SimpleHTTPRequestHandler):
             active = None
 
         for fname in sorted(os.listdir(PUZZLES_DIR)):
-            if not fname.endswith('.json') or fname == 'config.json':
+            if not fname.endswith('.json') or fname in ('config.json', 'board.json'):
                 continue
             try:
                 with open(os.path.join(PUZZLES_DIR, fname)) as f:
@@ -97,6 +103,14 @@ class Handler(SimpleHTTPRequestHandler):
             self.wfile.write(b'{"ok":true}')
         except Exception as e:
             self.send_error(400, str(e))
+
+    def _write_board(self, data):
+        required = {'rows', 'cols', 'blocked', 'bonusDef'}
+        missing = required - data.keys()
+        if missing:
+            raise ValueError(f'missing keys: {missing}')
+        with open(os.path.join(PUZZLES_DIR, 'board.json'), 'w') as f:
+            json.dump(data, f, indent=2)
 
     def _write_config(self, data):
         if 'active' not in data:
