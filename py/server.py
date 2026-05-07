@@ -15,7 +15,8 @@ import re
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 PORT = 8080
-PUZZLES_DIR = os.path.join(os.path.dirname(__file__), 'puzzles')
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PUZZLES_DIR = os.path.join(ROOT, 'puzzles')
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -119,6 +120,6 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(ROOT)
     print(f'Grid-game dev server running at http://localhost:{PORT}')
     HTTPServer(('', PORT), Handler).serve_forever()

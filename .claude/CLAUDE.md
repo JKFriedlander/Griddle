@@ -29,15 +29,15 @@ There is also a companion **Puzzle Analyzer** (a standalone React JSX tool in `d
 
 ## Running Locally
 
-All JS files use `export`/`import` (ES modules). `index.html` loads `main.js` with `type="module"`. **Requires `server.py`** — `file://` protocol blocks module imports, and the puzzle API needs the custom server.
+All JS files use `export`/`import` (ES modules). `index.html` loads `main.js` with `type="module"`. **Requires `py/server.py`** — `file://` protocol blocks module imports, and the puzzle API needs the custom server.
 
 ```bash
 cd grid-game
-python3 server.py
+python3 py/server.py
 # → open http://localhost:8080
 ```
 
-`server.py` serves static files and provides a small write API for the puzzle admin panel (see [Puzzle system](#puzzle-system) below).
+`py/server.py` serves static files and provides a small write API for the puzzle admin panel (see [Puzzle system](#puzzle-system) below).
 
 ---
 
@@ -72,7 +72,7 @@ Puzzles are stored as JSON files in [puzzles/](puzzles/). `puzzles/config.json` 
 { "active": "puzzle-01" }
 ```
 
-Each puzzle JSON is a complete `GameState` snapshot (full `h`/`v`/`captured`/`committed` arrays). `server.py` exposes:
+Each puzzle JSON is a complete `GameState` snapshot (full `h`/`v`/`captured`/`committed` arrays). `py/server.py` exposes:
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -91,8 +91,8 @@ The **Puzzle Manager** at `developer/puzzle-manager.html` provides a UI for crea
 - **Do not** call `renderGame()` from inside the AI `setTimeout` loop body — only call it after the loop completes
 - **Do not** mutate the `app.game` state object in place — always replace it with a new object returned by `applyMove`
 - **Do not** import from `main.js` — it is the entry point only. All shared logic lives in `config.js`, `game.js`, `puzzle.js`, or `renderer.js`
-- **Do not** add a build step — the project must remain runnable with just `python3 server.py`
-- **Do not** use `python3 -m http.server` — the puzzle API requires `server.py`
+- **Do not** add a build step — the project must remain runnable with just `python3 py/server.py`
+- **Do not** use `python3 -m http.server` — the puzzle API requires `py/server.py`
 
 ## Common extension patterns
 
@@ -109,6 +109,6 @@ The **Puzzle Manager** at `developer/puzzle-manager.html` provides a UI for crea
 4. Update `buildExplanation()` in `developer/puzzle-analyzer.jsx` for the theory text
 
 ### Adding a new puzzle
-1. Open `developer/puzzle-manager.html` (requires `server.py` running) and use the UI to create the puzzle JSON, or write `puzzles/<id>.json` by hand following the shape of `puzzles/puzzle-01.json`
+1. Open `developer/puzzle-manager.html` (requires `py/server.py` running) and use the UI to create the puzzle JSON, or write `puzzles/<id>.json` by hand following the shape of `puzzles/puzzle-01.json`
 2. Set `"active"` in `puzzles/config.json` to the new ID (or use the Puzzle Manager UI)
 3. Verify the GTO solution using `developer/puzzle-analyzer.html` before shipping
