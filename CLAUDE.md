@@ -53,3 +53,4 @@ SVG attributes can't use CSS custom properties, so theme colors live in `THEMES`
 - Always use CSS custom properties (`var(--token)`) — never hardcode color values (hex, rgb, rgba, hsl) directly in rules.
 - If a needed color isn't covered by an existing token, add it to both `[data-theme="dark"]` and `[data-theme="light"]` in `styles.css` before using it.
 - After any style change, scan the full `.css` file being edited for remaining hardcoded color values and replace them with the appropriate variables.
+- Styles should never exist in an `.html` file.  They should always live in a `.css` file within the `css/` directory.
