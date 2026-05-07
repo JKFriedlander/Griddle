@@ -34,6 +34,12 @@
   --p1-shadow:    rgba(0, 212, 240, 0.45);
   --p2-shadow:    rgba(255, 88, 40, 0.45);
   --gold-shadow:  rgba(240, 160, 16, 0.45);
+  --p1-subtle:    rgba(0, 212, 240, 0.12);
+  --p1-subtle-hover: rgba(0, 212, 240, 0.20);
+  --p1-glow:      rgba(0, 212, 240, 0.20);
+  --p1-drop:      rgba(0, 212, 240, 0.50);
+  --p2-drop:      rgba(255, 88, 40, 0.50);
+  --run-border:   rgba(255, 215, 0, 0.25);
 }
 
 /* ─── Light Theme ────────────────────────────────────────────────────────── */
@@ -59,6 +65,12 @@
   --p1-shadow:    transparent;
   --p2-shadow:    transparent;
   --gold-shadow:  transparent;
+  --p1-subtle:    rgba(0, 80, 200, 0.08);
+  --p1-subtle-hover: rgba(0, 80, 200, 0.14);
+  --p1-glow:      transparent;
+  --p1-drop:      transparent;
+  --p2-drop:      transparent;
+  --run-border:   rgba(160, 120, 0, 0.25);
 }
 
 /* ─── Base ───────────────────────────────────────────────────────────────── */
@@ -197,7 +209,7 @@ body {
   border-color: var(--p1);
   color: var(--p1);
   background: var(--hover-bg);
-  box-shadow: 0 0 16px rgba(0, 212, 240, 0.12);
+  box-shadow: 0 0 16px var(--p1-subtle);
 }
 
 /* ─── Game Screen ────────────────────────────────────────────────────────── */
@@ -258,7 +270,7 @@ body {
   padding: 2px 9px;
   margin-top: 4px;
   letter-spacing: 0.08em;
-  border: 1px solid rgba(255, 215, 0, 0.25);
+  border: 1px solid var(--run-border);
 }
 
 .run-spacer { height: 20px; }
@@ -272,10 +284,10 @@ body {
   transition: background var(--ease);
 }
 [data-theme="dark"] .score-block.active.player-0 .score-value {
-  filter: drop-shadow(0 0 12px rgba(0, 212, 240, 0.5));
+  filter: drop-shadow(0 0 12px var(--p1-drop));
 }
 [data-theme="dark"] .score-block.active.player-1 .score-value {
-  filter: drop-shadow(0 0 12px rgba(255, 88, 40, 0.5));
+  filter: drop-shadow(0 0 12px var(--p2-drop));
 }
 
 /* ─── Puzzle hint ────────────────────────────────────────────────────────── */
@@ -387,8 +399,8 @@ body {
   font-family: var(--font-mono);
   line-height: 1;
 }
-[data-theme="dark"] .final-value.c-p1 { filter: drop-shadow(0 0 14px rgba(0, 212, 240, 0.4)); }
-[data-theme="dark"] .final-value.c-p2 { filter: drop-shadow(0 0 14px rgba(255, 88, 40, 0.4)); }
+[data-theme="dark"] .final-value.c-p1 { filter: drop-shadow(0 0 14px var(--p1-drop)); }
+[data-theme="dark"] .final-value.c-p2 { filter: drop-shadow(0 0 14px var(--p2-drop)); }
 
 .puzzle-result {
   font-size: 10px;
@@ -403,7 +415,7 @@ body {
 }
 
 .btn-primary {
-  background: rgba(0, 212, 240, 0.12);
+  background: var(--p1-subtle);
   border: 1px solid var(--p1);
   border-radius: 6px;
   color: var(--p1);
@@ -415,8 +427,8 @@ body {
   transition: background 0.15s, box-shadow 0.15s;
 }
 .btn-primary:hover {
-  background: rgba(0, 212, 240, 0.2);
-  box-shadow: 0 0 18px rgba(0, 212, 240, 0.2);
+  background: var(--p1-subtle-hover);
+  box-shadow: 0 0 18px var(--p1-glow);
 }
 
 .btn-secondary {
