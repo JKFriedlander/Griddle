@@ -13,27 +13,27 @@
 
 /* ─── Dark Theme ─────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --bg:           #07090f;
-  --surface:      #0f1c2a;
-  --border:       #1d3a52;
+  --bg:           #080d1a;
+  --surface:      #111d30;
+  --border:       #2a4968;
   --p1:           #00d4f0;
   --p2:           #ff5828;
-  --text:         #a8cdd8;
-  --text-sub:     #28606e;
-  --text-dim:     #121f28;
-  --f1:           #4488ee;
-  --m2:           #e09000;
-  --m3:           #e83020;
-  --f3:           #00bb78;
-  --bk-x:         #2d5068;
+  --text:         #cce0ec;
+  --text-sub:     #6aaec8;
+  --text-dim:     #3d6880;
+  --f1:           #5599ff;
+  --m2:           #f0a010;
+  --m3:           #f04030;
+  --f3:           #00cc88;
+  --bk-x:         #4d7fa0;
   --run-color:    #ffd700;
-  --run-bg:       rgba(255, 215, 0, 0.13);
-  --score-line:   #1d3a52;
-  --overlay-bg:   rgba(7, 9, 15, 0.93);
-  --hover-bg:     rgba(0, 212, 240, 0.05);
-  --p1-shadow:    rgba(0, 212, 240, 0.33);
-  --p2-shadow:    rgba(255, 88, 40, 0.33);
-  --gold-shadow:  rgba(224, 144, 0, 0.33);
+  --run-bg:       rgba(255, 215, 0, 0.18);
+  --score-line:   #2a4968;
+  --overlay-bg:   rgba(8, 13, 26, 0.96);
+  --hover-bg:     rgba(0, 212, 240, 0.10);
+  --p1-shadow:    rgba(0, 212, 240, 0.45);
+  --p2-shadow:    rgba(255, 88, 40, 0.45);
+  --gold-shadow:  rgba(240, 160, 16, 0.45);
 }
 
 /* ─── Light Theme ────────────────────────────────────────────────────────── */
@@ -95,7 +95,7 @@ body {
 .c-m3     { color: var(--m3); }
 .c-f3     { color: var(--f3); }
 .c-bk     { color: var(--bk-x); }
-.c-text-sub { color: var(--text-sub); }
+.c-text-sub { color: var(--text-sub); opacity: 0.8; }
 .c-p1-bg  { background: var(--p1); }
 .c-p2-bg  { background: var(--p2); }
 
@@ -125,25 +125,25 @@ body {
 .game-title {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 38px;
+  font-size: 42px;
   letter-spacing: 0.45em;
   color: var(--p1);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   text-align: center;
-  text-shadow: 0 0 28px var(--p1-shadow);
+  text-shadow: 0 0 32px var(--p1-shadow);
 }
 .game-title.small {
-  font-size: 22px;
+  font-size: 24px;
   letter-spacing: 0.44em;
-  margin-bottom: 13px;
-  text-shadow: 0 0 18px var(--p1-shadow);
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px var(--p1-shadow);
 }
 
 .game-subtitle {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   color: var(--text-sub);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   text-align: center;
 }
 
@@ -157,12 +157,18 @@ body {
 }
 
 .menu-legend {
-  font-size: 9px;
-  color: var(--text-dim);
+  font-size: 11px;
+  color: var(--text-sub);
   margin-bottom: 38px;
-  line-height: 2.2;
+  line-height: 2.4;
   text-align: center;
   letter-spacing: 0.08em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  width: 100%;
+  max-width: 340px;
 }
 
 .menu-buttons {
@@ -174,23 +180,24 @@ body {
 }
 
 .menu-btn {
-  background: transparent;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--border-radius-md);
-  color: var(--text-sub);
+  border-radius: 6px;
+  color: var(--text);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.18em;
-  padding: 13px 16px;
+  padding: 16px 20px;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, box-shadow 0.15s;
   text-align: center;
   width: 100%;
 }
 .menu-btn:hover {
   border-color: var(--p1);
-  color: var(--text);
+  color: var(--p1);
   background: var(--hover-bg);
+  box-shadow: 0 0 16px rgba(0, 212, 240, 0.12);
 }
 
 /* ─── Game Screen ────────────────────────────────────────────────────────── */
@@ -204,14 +211,19 @@ body {
 /* ─── Scoreboard ─────────────────────────────────────────────────────────── */
 .scoreboard {
   display: flex;
-  gap: 22px;
-  margin-bottom: 10px;
+  gap: 28px;
+  margin-bottom: 12px;
   align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 24px;
 }
 
 .score-vs {
-  font-size: 11px;
-  color: var(--score-line);
+  font-size: 12px;
+  color: var(--border);
+  letter-spacing: 0.08em;
 }
 
 .score-block {
@@ -223,9 +235,9 @@ body {
 .score-block.player-1 { align-items: flex-start; text-align: left; }
 
 .score-label {
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  margin-bottom: 2px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
   color: var(--text-sub);
   transition: color var(--ease);
 }
@@ -233,19 +245,20 @@ body {
 .score-block.active.player-1 .score-label { color: var(--p2); }
 
 .score-value {
-  font-size: 28px;
+  font-size: 40px;
   font-weight: bold;
   line-height: 1;
 }
 
 .run-badge {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--run-color);
   background: var(--run-bg);
   border-radius: var(--border-radius-sm);
-  padding: 1px 7px;
-  margin-top: 3px;
+  padding: 2px 9px;
+  margin-top: 4px;
   letter-spacing: 0.08em;
+  border: 1px solid rgba(255, 215, 0, 0.25);
 }
 
 .run-spacer { height: 20px; }
@@ -253,17 +266,24 @@ body {
 .score-underline {
   height: 2px;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 6px;
   border-radius: 1px;
+  background: var(--border);
   transition: background var(--ease);
+}
+[data-theme="dark"] .score-block.active.player-0 .score-value {
+  filter: drop-shadow(0 0 12px rgba(0, 212, 240, 0.5));
+}
+[data-theme="dark"] .score-block.active.player-1 .score-value {
+  filter: drop-shadow(0 0 12px rgba(255, 88, 40, 0.5));
 }
 
 /* ─── Puzzle hint ────────────────────────────────────────────────────────── */
 .puzzle-hint {
-  font-size: 9px;
+  font-size: 11px;
   color: var(--text-sub);
   letter-spacing: 0.12em;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
@@ -279,28 +299,28 @@ body {
 
 /* ─── Status Bar ─────────────────────────────────────────────────────────── */
 .status-bar {
-  margin-top: 10px;
-  font-size: 9px;
+  margin-top: 12px;
+  font-size: 11px;
   color: var(--text-sub);
   letter-spacing: 0.1em;
   text-align: center;
-  line-height: 2;
+  line-height: 2.2;
 }
-.ai-thinking { color: var(--p2); }
+.ai-thinking { color: var(--p2); font-weight: bold; }
 
-.legend-bar { font-size: 9px; }
+.legend-bar { font-size: 11px; }
 
 /* ─── Back Button ────────────────────────────────────────────────────────── */
 .back-btn {
-  margin-top: 10px;
-  background: transparent;
-  border: 1px solid var(--score-line);
-  border-radius: var(--border-radius-sm);
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
   color: var(--text-sub);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.14em;
-  padding: 4px 16px;
+  padding: 8px 22px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
 }
@@ -383,28 +403,31 @@ body {
 }
 
 .btn-primary {
-  background: transparent;
+  background: rgba(0, 212, 240, 0.12);
   border: 1px solid var(--p1);
-  border-radius: var(--border-radius-sm);
+  border-radius: 6px;
   color: var(--p1);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.15em;
-  padding: 10px 26px;
+  padding: 12px 30px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
 }
-.btn-primary:hover { background: var(--hover-bg); }
+.btn-primary:hover {
+  background: rgba(0, 212, 240, 0.2);
+  box-shadow: 0 0 18px rgba(0, 212, 240, 0.2);
+}
 
 .btn-secondary {
-  background: transparent;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--border-radius-sm);
+  border-radius: 6px;
   color: var(--text-sub);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.15em;
-  padding: 10px 26px;
+  padding: 12px 30px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
 }
@@ -423,20 +446,30 @@ body {
 }
 
 /* ========== FOOTER ========== */
-footer{
+footer {
   width: 100%;
   margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding: 12px 0;
 }
 footer ul {
-  text-align: center; 
-  padding: 1rem; 
-  font-size: 0.9rem; 
-  color: #888;
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-dim);
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 24px;
+  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
 }
-footer ul a{
-  color: #888;
+footer ul a {
+  color: var(--text-dim);
   text-decoration: none;
+  transition: color 0.15s;
+}
+footer ul a:hover {
+  color: var(--text-sub);
 }
