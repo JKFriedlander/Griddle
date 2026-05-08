@@ -45,14 +45,17 @@ app.game   = { ...res, player: next, over };
 ```js
 const app = {
   dark:       boolean,
-  mode:       '2P' | 'AI' | 'SOLO' | null,  // SOLO = Puzzle Mode
+  mode:       '2P' | 'AI' | 'SOLO' | 'HTP' | null,  // SOLO = Puzzle Mode, HTP = How To Play
   game:       GameState | null,
   aiRunning:  boolean,
   hov:        { t, r, c } | null,    // hovered edge
   hovKey:     string | null,          // serialized hov for fast change-detection
   boardCtrl:  AbortController | null, // board event listener cleanup
+  demoStep:   number,                 // 0–3 — active step in the menu demo
 };
 ```
+
+`mode === 'HTP'` renders the How To Play screen (`renderHowToPlay()`). `demoStep` is reset to 0 when returning to the menu via `goToMenu()`.
 
 ### Render strategy
 
@@ -60,6 +63,8 @@ const app = {
 |---------|----------|--------------|
 | Mode change, move made, theme toggle | `renderGame()` | Full `#app` innerHTML |
 | Hover over edge | `updateBoardOnly()` | Only `#board-container` innerHTML |
+| Menu demo navigation | `renderMenu()` | Full `#app` innerHTML |
+| How To Play navigation | `renderHowToPlay()` | Full `#app` innerHTML |
 
 **Board events use event delegation**: listeners attach to `#board-container` (the stable container), not to individual SVG child elements. This means `#board-container.innerHTML` can be replaced freely without losing the event listeners. Listeners are managed with `AbortController` — call `app.boardCtrl.abort()` before re-attaching.
 

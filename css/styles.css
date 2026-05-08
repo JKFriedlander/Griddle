@@ -489,6 +489,128 @@ body {
   animation: lastPulse 1.4s ease-in-out infinite;
 }
 
+/* ─── Menu Demo ──────────────────────────────────────────────────────────── */
+.demo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 28px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.demo-board {
+  line-height: 0;
+  margin-bottom: 10px;
+}
+
+.demo-caption {
+  font-size: 11px;
+  color: var(--text-sub);
+  letter-spacing: 0.08em;
+  text-align: center;
+  min-height: 32px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.demo-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.demo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius-md);
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  line-height: 1;
+}
+.demo-btn:hover:not(:disabled) {
+  border-color: var(--p1);
+  color: var(--p1);
+}
+.demo-btn:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.demo-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.demo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s;
+}
+.demo-dot.active {
+  background: var(--p1);
+}
+
+/* ─── How To Play link ───────────────────────────────────────────────────── */
+.how-to-link {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  margin-top: 6px;
+  padding: 6px 10px;
+  transition: color 0.15s;
+}
+.how-to-link:hover { color: var(--p1); }
+
+/* ─── How To Play screen ─────────────────────────────────────────────────── */
+.htp-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.htp-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.htp-heading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--text);
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.htp-rule {
+  font-size: 11px;
+  color: var(--text-sub);
+  line-height: 2;
+  letter-spacing: 0.06em;
+}
+
 /* ========== FOOTER ========== */
 footer {
   width: 100%;

@@ -138,6 +138,27 @@ Applied via JS `innerHTML` strings. Do not add inline `style=` for colours — u
 
 ---
 
+## Menu demo + How To Play screens
+
+New classes added for the tutorial feature. All use existing tokens.
+
+| Class | Purpose |
+|-------|---------|
+| `.demo-wrap` | Container for the menu mini-board demo |
+| `.demo-board` | Holds the 160×160 demo SVG |
+| `.demo-caption` | Step description text; `min-height` keeps layout stable across steps |
+| `.demo-nav` | Row with PREV/NEXT buttons and step-indicator dots |
+| `.demo-btn` | PREV/NEXT buttons; `:disabled` → 28% opacity |
+| `.demo-dots` | Row of step-indicator dots |
+| `.demo-dot` | Individual dot; `.active` uses `--p1` fill |
+| `.how-to-link` | Borderless text button linking to the How To Play screen |
+| `.htp-screen` | Flex column wrapper for the How To Play layout |
+| `.htp-section` | Surface card per rules section (same look as the old `.menu-legend`) |
+| `.htp-heading` | Bold section label inside `.htp-section` |
+| `.htp-rule` | Individual rule line; reuses `.c-f1`, `.c-m2`, `.c-bk` for symbols |
+
+---
+
 ## CSS conventions
 
 - **All colours** go through CSS custom properties (`var(--token)`) — never hardcode hex/rgb/hsl values directly in rules.
