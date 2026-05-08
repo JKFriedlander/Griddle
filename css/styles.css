@@ -304,11 +304,13 @@ body {
 /* ─── Board ──────────────────────────────────────────────────────────────── */
 .board-container {
   line-height: 0; /* prevent extra inline-block spacing below SVG */
+  width: 100%;    /* constrain container so max-width:100% on svg scales it down on mobile */
 }
 .board-container svg {
   max-width: 100%;
   max-height: 64vh;
   display: block;
+  margin: 0 auto;
 }
 
 /* ─── Status Bar ─────────────────────────────────────────────────────────── */

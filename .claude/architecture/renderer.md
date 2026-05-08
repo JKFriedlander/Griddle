@@ -4,7 +4,7 @@
 
 ### Rendering layers (SVG paint order)
 
-1. `<defs>` — glow filters (`gp1`, `gp2` normal; `gl1`, `gl2` last-move)
+1. `<defs>` — glow filters (`gp1`, `gp2` normal; `gl1`, `gl2` last-move). Filters use `filterUnits="userSpaceOnUse"` with absolute SVG-canvas coordinates. Percentage-based `objectBoundingBox` units cannot be used for `<line>` elements because their geometric bounding box has zero height/width, which collapses the filter region and makes lines invisible on mobile browsers.
 2. Background grid lines
 3. Captured box fills (`<rect>` with player fill colour)
 4. Bonus icons (circles for flat bonuses, rotated squares for multipliers)
