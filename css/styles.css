@@ -447,6 +447,23 @@ body {
 }
 .btn-secondary:hover { border-color: var(--text); color: var(--text); }
 
+/* ─── Share Button ───────────────────────────────────────────────────────── */
+.btn-share {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  padding: 10px 40px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  min-width: 160px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-share:hover { border-color: var(--text); color: var(--text); }
+
 /* ─── SVG Animations ─────────────────────────────────────────────────────── */
 @keyframes lastPulse {
   0%, 100% { opacity: 1; }
