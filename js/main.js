@@ -395,7 +395,7 @@ function renderMenu() {
       <div class="menu-buttons">
         <button class="menu-btn menu-btn--puzzle" data-mode="SOLO">
           ${buildPuzzleIconSVG()}
-          PUZZLE MODE
+          DAILY PUZZLE
         </button>
         <div class="menu-btn-row">
           <button class="menu-btn" data-mode="2P">TWO PLAYERS</button>
