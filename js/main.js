@@ -343,9 +343,11 @@ function renderMenu() {
       </div>
 
       <div class="menu-buttons">
-        <button class="menu-btn" data-mode="2P">TWO PLAYERS</button>
-        <button class="menu-btn" data-mode="AI">VS COMPUTER</button>
-        <button class="menu-btn" data-mode="SOLO">PUZZLE MODE · BEAT THE CPU</button>
+        <button class="menu-btn menu-btn--puzzle" data-mode="SOLO">PUZZLE MODE · BEAT THE CPU</button>
+        <div class="menu-btn-row">
+          <button class="menu-btn" data-mode="2P">TWO PLAYERS</button>
+          <button class="menu-btn" data-mode="AI">VS COMPUTER</button>
+        </div>
       </div>
     </div>
   `;
