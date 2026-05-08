@@ -254,10 +254,40 @@ function renderGame() {
   if (over) {
     document.getElementById('play-again')?.addEventListener('click', () => startGame(app.mode));
     document.getElementById('go-menu')?.addEventListener('click', goToMenu);
+    document.getElementById('share-result')?.addEventListener('click', onShareClick);
   }
 
   // Wire up board interaction (replaces any stale AbortController)
   attachBoardEvents();
+}
+
+function buildShareText(wi, fs) {
+  const title = app.game.title ?? app.game.id ?? 'Puzzle';
+  let resultLine;
+  if (wi === 0)      resultLine = `YOU WIN  ${fs[0]}–${fs[1]}  ⭐`;
+  else if (wi === 1) resultLine = `CPU WINS  ${fs[1]}–${fs[0]}`;
+  else               resultLine = `TIE GAME  ${fs[0]}–${fs[1]}`;
+
+  const grid = app.game.captured
+    .map(row => row.map(cell => cell === null ? '⬛' : cell === 0 ? '🟦' : '🟥').join(''))
+    .join('\n');
+
+  return `GRID · ${title}\n${resultLine}\n\n${grid}`;
+}
+
+function onShareClick() {
+  const btn = document.getElementById('share-result');
+  if (!btn) return;
+  const fs = finalScores();
+  const wi = fs[0] > fs[1] ? 0 : fs[1] > fs[0] ? 1 : -1;
+  const text = buildShareText(wi, fs);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED!';
+    setTimeout(() => { btn.textContent = 'SHARE'; }, 2000);
+  }).catch(() => {
+    btn.textContent = 'COPY FAILED';
+    setTimeout(() => { btn.textContent = 'SHARE'; }, 2000);
+  });
 }
 
 function buildGameOverOverlay(wi, fs, isSolo) {
@@ -280,7 +310,8 @@ function buildGameOverOverlay(wi, fs, isSolo) {
         ${isSolo
           ? `<p class="puzzle-result c-${wi === 0 ? 'f3' : 'm3'}">
                ${wi === 0 ? 'OPTIMAL PLAY FOUND!' : 'TRY SAVING THE ×3 FOR LAST'}
-             </p>`
+             </p>
+             <button class="btn-share" id="share-result">SHARE</button>`
           : ''}
         <div class="game-over-buttons">
           <button class="btn-primary" id="play-again">PLAY AGAIN</button>
