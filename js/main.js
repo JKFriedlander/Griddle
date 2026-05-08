@@ -329,8 +329,8 @@ function renderMenu() {
         ${app.dark ? '☀ LIGHT' : '☾ DARK'}
       </button>
 
-      <h1 class="game-title">GRID</h1>
-      <p class="game-subtitle">DOTS &amp; BOXES · REIMAGINED</p>
+      <h1 class="game-title">GRIDDLE</h1>
+      <h2 class="game-subtitle">The perfect puzzle to go along with eggs and bacon.</h2>
 
       <div class="menu-legend">
         <div><span class="c-bk">╳</span> BLOCKED NODE — CREATES PERMANENT WALLS</div>
