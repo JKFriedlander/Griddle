@@ -321,6 +321,56 @@ function buildGameOverOverlay(wi, fs, isSolo) {
     </div>`;
 }
 
+// ─── Puzzle icon for the menu button ─────────────────────────────────────
+function buildPuzzleIconSVG() {
+  const th = getTheme();
+  const sp = 20, pad = 8;
+  const cx = c => pad + c * sp;
+  const cy = r => pad + r * sp;
+
+  const seg = (x1, y1, x2, y2, color, dash = false) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"` +
+    ` stroke="${color}" stroke-width="${dash ? 1 : 2.5}" stroke-linecap="round"` +
+    (dash ? ` stroke-dasharray="2.5 3" opacity="0.55"` : '') + '/>`;
+
+  const dot = (r, c) =>
+    `<circle cx="${cx(c)}" cy="${cy(r)}" r="2.8"` +
+    ` fill="${th.dotFill}" stroke="${th.dotStroke}" stroke-width="1.2"/>`;
+
+  // TL box captured by player 1
+  const fill = `<rect x="${cx(0) + 1}" y="${cy(0) + 1}" width="${sp - 2}" height="${sp - 2}"` +
+    ` fill="${th.p1Fill}" rx="1"/>`;
+
+  // ×2 multiplier bonus in TR box (the "prize" for solving the puzzle)
+  const bx = cx(1) + sp / 2, by = cy(0) + sp / 2, bsz = 6.5;
+  const bonus =
+    `<rect x="${bx - bsz}" y="${by - bsz}" width="${bsz * 2}" height="${bsz * 2}"` +
+    ` transform="rotate(45 ${bx} ${by})" fill="${th.m2bg}" stroke="${th.m2}" stroke-width="0.8" rx="1.5"/>` +
+    `<text x="${bx}" y="${by}" text-anchor="middle" dominant-baseline="central"` +
+    ` font-size="7" fill="${th.m2}" font-family="'Share Tech Mono',monospace" font-weight="bold">×2</text>`;
+
+  // Edges: TL fully claimed; TR missing its bottom edge (the puzzle); BL partial; BR empty
+  const edges = [
+    seg(cx(0), cy(0), cx(1), cy(0), th.p1),          // h top-left
+    seg(cx(1), cy(0), cx(2), cy(0), th.p1),          // h top-right
+    seg(cx(0), cy(1), cx(1), cy(1), th.p1),          // h mid-left
+    seg(cx(1), cy(1), cx(2), cy(1), th.dash, true),  // h mid-right  ← missing edge
+    seg(cx(0), cy(2), cx(1), cy(2), th.dash, true),  // h bottom-left
+    seg(cx(1), cy(2), cx(2), cy(2), th.dash, true),  // h bottom-right
+    seg(cx(0), cy(0), cx(0), cy(1), th.p1),          // v left-top
+    seg(cx(1), cy(0), cx(1), cy(1), th.p1),          // v mid-top
+    seg(cx(2), cy(0), cx(2), cy(1), th.p1),          // v right-top
+    seg(cx(0), cy(1), cx(0), cy(2), th.p1),          // v left-bottom
+    seg(cx(1), cy(1), cx(1), cy(2), th.dash, true),  // v mid-bottom
+    seg(cx(2), cy(1), cx(2), cy(2), th.dash, true),  // v right-bottom
+  ].join('');
+
+  const dots = [0, 1, 2].flatMap(r => [0, 1, 2].map(c => dot(r, c))).join('');
+
+  return `<svg viewBox="0 0 56 56" width="44" height="44" style="flex-shrink:0">` +
+    fill + bonus + edges + dots + `</svg>`;
+}
+
 // ─── Full render: menu screen ─────────────────────────────────────────────
 function renderMenu() {
   document.getElementById('app').innerHTML = `
@@ -343,7 +393,10 @@ function renderMenu() {
       </div>
 
       <div class="menu-buttons">
-        <button class="menu-btn menu-btn--puzzle" data-mode="SOLO">PUZZLE MODE · BEAT THE CPU</button>
+        <button class="menu-btn menu-btn--puzzle" data-mode="SOLO">
+          ${buildPuzzleIconSVG()}
+          DAILY PUZZLE
+        </button>
         <div class="menu-btn-row">
           <button class="menu-btn" data-mode="2P">TWO PLAYERS</button>
           <button class="menu-btn" data-mode="AI">VS COMPUTER</button>
