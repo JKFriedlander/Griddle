@@ -18,24 +18,25 @@ const rect = (attrs) => {
 };
 
 // ─── Glow filter defs ────────────────────────────────────────────────────
-function buildDefs(th) {
-  const filter = (id, r) => `
-    <filter id="${id}" x="-70%" y="-70%" width="240%" height="240%">
-      <feGaussianBlur stdDeviation="${r}" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>`;
-
-  const filterLg = (id, r) => `
-    <filter id="${id}" x="-100%" y="-100%" width="300%" height="300%">
+// filterUnits="userSpaceOnUse" with absolute SVG-canvas coordinates is
+// required for <line> elements. The default objectBoundingBox units compute
+// the filter region as a percentage of the element's bounding box; for a
+// horizontal line that bounding box has zero height, collapsing the filter
+// region to zero and making the line invisible on mobile browsers that
+// compute geometric (stroke-excluded) bounding boxes.
+function buildDefs(th, bw, bh) {
+  const m = Math.ceil(th.lastGlowR * 3);
+  const mkFilter = (id, r) => `
+    <filter id="${id}" filterUnits="userSpaceOnUse" x="${-m}" y="${-m}" width="${bw + m * 2}" height="${bh + m * 2}">
       <feGaussianBlur stdDeviation="${r}" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>`;
 
   return `<defs>
-    ${filter('gp1', th.glowR)}
-    ${filter('gp2', th.glowR)}
-    ${filterLg('gl1', th.lastGlowR)}
-    ${filterLg('gl2', th.lastGlowR)}
+    ${mkFilter('gp1', th.glowR)}
+    ${mkFilter('gp2', th.glowR)}
+    ${mkFilter('gl1', th.lastGlowR)}
+    ${mkFilter('gl2', th.lastGlowR)}
   </defs>`;
 }
 
@@ -232,7 +233,7 @@ export function buildBoardSVG(game, bonusDef, th, dark, hov, canDraw, hovColor) 
     viewBox="0 0 ${bw} ${bh}">`;
 
   // ─ Filters ─
-  out += buildDefs(th);
+  out += buildDefs(th, bw, bh);
 
   // ─ Background grid lines (very subtle) ─
   for (let i = 0; i <= rows; i++) {
