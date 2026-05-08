@@ -1,6 +1,6 @@
 ## Solo Puzzle Mode
 
-The puzzle is loaded dynamically from `puzzles/config.json` → `puzzles/<id>.json` via `loadActivePuzzle()` in `puzzle.js`. The active puzzle can be changed from the Puzzle Manager at `developer/puzzle-manager.html`.
+The puzzle is loaded dynamically from `puzzles/config.json` → `puzzles/<id>.json` via `loadActivePuzzle()` in `puzzle.js`. If the server is unavailable, `loadActivePuzzle()` falls back to the built-in `DEFAULT_PUZZLE` constant (a copy of puzzle-01) embedded in `puzzle.js`. The active puzzle can be changed from the Puzzle Manager at `developer/puzzle-manager.html`.
 
 ### Default puzzle: "The Classic" (`puzzle-01`)
 
@@ -28,11 +28,7 @@ After the player opens D (no capture), `runCPU()` fires — CPU captures D, scor
 
 ### Puzzle-specific bonus map
 
-The puzzle uses `SOLO_BMAP` instead of `BMAP`. In `main.js`, the correct map is selected:
-
-```js
-const bm = app.mode === 'SOLO' ? SOLO_BMAP : BMAP;
-```
+Each puzzle JSON includes its own `bonusDef` array. `startGame('SOLO')` in `main.js` builds `puzzle.bmap` from it and stores it on the game object. `getBmap()` returns `app.game.bmap` when in SOLO mode, so the puzzle's bonuses are used for scoring rather than the regular board's.
 
 ### Puzzle JSON format
 
@@ -44,6 +40,10 @@ Each puzzle file is a complete `GameState` snapshot:
   "title": "The Classic",
   "description": "...",
   "difficulty": "medium",
+  "rows": 5,
+  "cols": 5,
+  "blocked": [{"r": 0, "c": 3}, ...],
+  "bonusDef": [{"r": 0, "c": 0, "op": "*", "val": 3}, ...],
   "h": [[...], ...],
   "v": [[...], ...],
   "captured": [[...], ...],
@@ -54,6 +54,8 @@ Each puzzle file is a complete `GameState` snapshot:
   "lastMove": null
 }
 ```
+
+`rows`, `cols`, `blocked`, and `bonusDef` are passed to `applyBoardConfig()` before the game starts, so puzzles can use a different board layout from the regular game.
 
 ### Adding a new puzzle
 
