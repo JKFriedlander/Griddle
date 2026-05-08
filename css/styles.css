@@ -191,6 +191,11 @@ body {
   max-width: 310px;
 }
 
+.menu-btn-row {
+  display: flex;
+  gap: 10px;
+}
+
 .menu-btn {
   display: block;
   text-decoration: none;
@@ -212,6 +217,12 @@ body {
   color: var(--p1);
   background: var(--hover-bg);
   box-shadow: 0 0 16px var(--p1-subtle);
+}
+
+.menu-btn--puzzle {
+  font-size: 15px;
+  padding: 24px 20px;
+  letter-spacing: 0.2em;
 }
 
 /* ─── Game Screen ────────────────────────────────────────────────────────── */
