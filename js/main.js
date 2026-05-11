@@ -428,7 +428,7 @@ function goToMenu() {
 // ─── Bootstrap ────────────────────────────────────────────────────────────
 async function init() {
   try {
-    app.globalBoard = await fetch('/puzzles/board.json').then(r => r.json());
+    app.globalBoard = await fetch('puzzles/board.json').then(r => r.json());
     applyBoardConfig(app.globalBoard);
   } catch {
     // server not running or board.json missing — keep config.js defaults
