@@ -45,8 +45,8 @@ const DEFAULT_PUZZLE = {
  *  built-in default if the server is unavailable. */
 export async function loadActivePuzzle() {
   try {
-    const { active } = await fetch('/puzzles/config.json').then(r => r.json());
-    return await fetch(`/puzzles/${active}.json`).then(r => r.json());
+    const { active } = await fetch('puzzles/config.json').then(r => r.json());
+    return await fetch(`puzzles/${active}.json`).then(r => r.json());
   } catch {
     return DEFAULT_PUZZLE;
   }

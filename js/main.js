@@ -331,7 +331,7 @@ function buildPuzzleIconSVG() {
   const seg = (x1, y1, x2, y2, color, dash = false) =>
     `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"` +
     ` stroke="${color}" stroke-width="${dash ? 1 : 2.5}" stroke-linecap="round"` +
-    (dash ? ` stroke-dasharray="2.5 3" opacity="0.55"` : '') + '/>`;
+    (dash ? ` stroke-dasharray="2.5 3" opacity="0.55"` : '') + '/>';
 
   const dot = (r, c) =>
     `<circle cx="${cx(c)}" cy="${cy(r)}" r="2.8"` +
@@ -428,7 +428,7 @@ function goToMenu() {
 // ─── Bootstrap ────────────────────────────────────────────────────────────
 async function init() {
   try {
-    app.globalBoard = await fetch('/puzzles/board.json').then(r => r.json());
+    app.globalBoard = await fetch('puzzles/board.json').then(r => r.json());
     applyBoardConfig(app.globalBoard);
   } catch {
     // server not running or board.json missing — keep config.js defaults
