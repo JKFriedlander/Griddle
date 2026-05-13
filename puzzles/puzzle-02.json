@@ -1,0 +1,43 @@
+{
+  "id": "puzzle-02",
+  "title": "The Gauntlet",
+  "description": "5 boxes remain. You're down 82 points. Only the perfect order wins.",
+  "difficulty": "hard",
+  "rows": 5,
+  "cols": 5,
+  "blocked": [{"r": 0, "c": 3}, {"r": 2, "c": 2}, {"r": 4, "c": 4}],
+  "bonusDef": [
+    {"r": 0, "c": 0, "op": "+", "val": 1},
+    {"r": 0, "c": 4, "op": "+", "val": 2},
+    {"r": 4, "c": 0, "op": "+", "val": 3},
+    {"r": 2, "c": 4, "op": "*", "val": 2},
+    {"r": 4, "c": 2, "op": "*", "val": 4}
+  ],
+  "h": [
+    [null, "pre", "wall", "wall", null],
+    ["pre", "pre", "pre", "pre", "pre"],
+    ["pre", "wall", "wall", "pre", "pre"],
+    ["pre", "pre", "pre", "pre", "pre"],
+    ["pre", "pre", "pre", "wall", "wall"],
+    [null, "pre", null, "pre", null]
+  ],
+  "v": [
+    ["pre", "pre", "pre", "wall", "pre", "pre"],
+    ["pre", "pre", "wall", "pre", "pre", "pre"],
+    ["pre", "pre", "wall", "pre", "pre", null],
+    ["pre", "pre", "pre", "pre", "wall", "pre"],
+    ["pre", "pre", "pre", "pre", "wall", null]
+  ],
+  "captured": [
+    [null, 1, 1, 1, null],
+    [0, 0, 0, 1, 1],
+    [0, 0, 1, 1, null],
+    [1, 1, 1, 1, 1],
+    [null, 1, null, 1, null]
+  ],
+  "committed": [5, 87],
+  "runScore": 0,
+  "player": 0,
+  "over": false,
+  "lastMove": null
+}

@@ -309,7 +309,7 @@ function buildGameOverOverlay(wi, fs, isSolo) {
         </div>
         ${isSolo
           ? `<p class="puzzle-result c-${wi === 0 ? 'f3' : 'm3'}">
-               ${wi === 0 ? 'OPTIMAL PLAY FOUND!' : 'TRY SAVING THE ×3 FOR LAST'}
+               ${wi === 0 ? 'OPTIMAL PLAY FOUND!' : 'FLAT BONUSES FIRST — THEN ×2 BEFORE ×4'}
              </p>
              <button class="btn-share" id="share-result">SHARE</button>`
           : ''}
